@@ -15,7 +15,7 @@ contract AdvisoryToken is ERC20, Ownable {
     }
 
     function mint() public onlyOwner {
-        uint256 hoursPassed = block.timestamp.sub(lastClaimedAt);
+        uint256 hoursPassed = block.timestamp.sub(lastClaimedAt).div(3600);
         _mint(msg.sender, hoursPassed * 10 ** decimals());
         lastClaimedAt = block.timestamp;
     }

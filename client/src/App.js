@@ -3,6 +3,7 @@ import "./App.css";
 import { getWeb3 } from "./getWeb3";
 import map from "./artifacts/deployments/map.json";
 import { getEthereum } from "./getEthereum";
+import { Button, ButtonGroup, Container } from "@chakra-ui/react";
 
 function App() {
 	const [metaMask, setMetaMask] = useState("");
@@ -102,18 +103,26 @@ function App() {
 	}
 
 	return (
-		<div>
-			Hello World!{" "}
+		<Container centerContent>
+			Hello World! <br />
 			{metaMask === "" ? ( //TO DO: Handle the different cases for wallet load conditions
 				"Loading"
 			) : (
 				<div>
-					<button onClick={ConnectWallet}>Connect Wallet!</button>
-					<button onClick={GetBalance}>Balance</button>
-					<button onClick={MintExtra}>Mint</button>
+					<Button colorScheme="blackAlpha" onClick={ConnectWallet}>
+						Connect Wallet!
+					</Button>
+					<br />
+					<Button colorScheme="facebook" onClick={GetBalance}>
+						Balance
+					</Button>
+					<br />
+					<Button colorScheme="whatsapp" onClick={MintExtra}>
+						Mint
+					</Button>
 				</div>
 			)}
-		</div>
+		</Container>
 	);
 }
 
