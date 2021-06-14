@@ -19,6 +19,11 @@ function App() {
 			console.log("web3 found");
 			details.current.web3 = web3;
 			details.current.chainid = parseInt(await web3.eth.getChainId());
+
+			await web3.eth.getAccounts((error, accounts) => {
+				details.current.accounts = accounts;
+				console.log(accounts);
+			});
 		}
 		setup();
 		if (typeof window.ethereum !== "undefined") {
@@ -30,6 +35,7 @@ function App() {
 			window.ethereum.on("accountsChanged", handleAccountsChanged);
 			window.ethereum.on("close", handleClose);
 			window.ethereum.on("networkChanged", handleNetworkChanged);
+			console.log(window.ethereum);
 		} else {
 			console.log("Install Metamask");
 		}
@@ -45,7 +51,9 @@ function App() {
 		try {
 			details.current.ethereum
 				.request({ method: "eth_requestAccounts" })
-				.then(() => console.log("Success"))
+				.then((accounts) => {
+					details.current.accounts = accounts;
+				})
 				.catch((error) => console.log("Error"));
 		} catch (error) {
 			console.log(error);
@@ -88,6 +96,11 @@ function App() {
 		console.log(val);
 	}
 
+	async function MintExtra() {
+		const advisory = await loadContract("dev", "AdvisoryToken");
+		await advisory.methods.mint().send({ from: details.current.accounts[0] });
+	}
+
 	return (
 		<div>
 			Hello World!{" "}
@@ -97,6 +110,7 @@ function App() {
 				<div>
 					<button onClick={ConnectWallet}>Connect Wallet!</button>
 					<button onClick={GetBalance}>Balance</button>
+					<button onClick={MintExtra}>Mint</button>
 				</div>
 			)}
 		</div>
