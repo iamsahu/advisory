@@ -3,7 +3,15 @@ import "./App.css";
 import { getWeb3 } from "./getWeb3";
 import map from "./artifacts/deployments/map.json";
 import { getEthereum } from "./getEthereum";
-import { Button, ButtonGroup, Container } from "@chakra-ui/react";
+import {
+	Button,
+	Heading,
+	Flex,
+	Container,
+	VStack,
+	Spacer,
+	Center,
+} from "@chakra-ui/react";
 
 function App() {
 	const [metaMask, setMetaMask] = useState("");
@@ -121,32 +129,39 @@ function App() {
 	}
 
 	return (
-		<Container centerContent justifyItems>
-			Hello World! <br />
-			{metaMask === "" ? ( //TO DO: Handle the different cases for wallet load conditions
-				"Loading"
-			) : (
-				<div>
-					{metaMask !== "Set" && (
-						<Button colorScheme="blackAlpha" onClick={ConnectWallet}>
-							Connect Wallet!
-						</Button>
-					)}
-					{metaMask === "Set" && (
-						<div>
-							<br />
-							<Button colorScheme="facebook" onClick={GetBalance}>
-								Balance
+		<Flex justifyContent flexGrow>
+			<Container centerContent>
+				<Heading as="h2" size="2xl">
+					Welcome to advisory!
+				</Heading>
+				{metaMask === "" ? ( //TO DO: Handle the different cases for wallet load conditions
+					"Loading"
+				) : (
+					<VStack py="4">
+						{metaMask !== "Set" && (
+							<Button colorScheme="blackAlpha" onClick={ConnectWallet}>
+								Connect Wallet!
 							</Button>
-							<br />
-							<Button colorScheme="whatsapp" onClick={MintExtra}>
-								Mint
-							</Button>
-						</div>
-					)}
-				</div>
-			)}
-		</Container>
+						)}
+						{metaMask === "Set" && (
+							<VStack>
+								<Center>
+									<Button colorScheme="facebook" onClick={GetBalance}>
+										Balance
+									</Button>
+								</Center>
+
+								<Center>
+									<Button colorScheme="whatsapp" onClick={MintExtra}>
+										Mint
+									</Button>
+								</Center>
+							</VStack>
+						)}
+					</VStack>
+				)}
+			</Container>
+		</Flex>
 	);
 }
 

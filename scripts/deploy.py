@@ -1,4 +1,4 @@
-from brownie import SolidityStorage, VyperStorage, AdvisoryToken, accounts
+from brownie import AdvisoryToken, accounts
 
 def main():
     """ Simple deploy script for our two contracts. """

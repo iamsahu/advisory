@@ -12,6 +12,7 @@ def test_advisory_deploy():
     Test if the contract is correctly deployed.
     """
     print(advisoryInstance.totalSupply())
+    print(chain.time())
     assert advisoryInstance.totalSupply() == 100000000000000000000000
 
 def test_initial_balance():
@@ -20,8 +21,12 @@ def test_initial_balance():
     
     assert balance == 100000000000000000000000
 
-# def test_mint():
-#     lastClaim = advisoryInstance.lastClaimedAt
-#     balance = advisoryInstance.totalSupply()
-#     advisoryInstance.mint()
-#     balanceAfter = advisoryInstance.totalSupply()
+def test_mint():
+    lastClaim = advisoryInstance.lastClaimedAt()
+    balance = advisoryInstance.totalSupply()
+    chain.sleep(3600)
+    advisoryInstance.mint()
+    balanceAfter = advisoryInstance.totalSupply()
+    latestClaim = advisoryInstance.lastClaimedAt()
+    val =Wei(str((latestClaim-lastClaim)/3600)+" ether")
+    assert (balanceAfter-balance) == val
