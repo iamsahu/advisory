@@ -20,18 +20,30 @@ function App() {
 			console.log("web3 found");
 			details.current.web3 = web3;
 			details.current.chainid = parseInt(await web3.eth.getChainId());
-
+			setMetaMask("GotWeb3");
 			await web3.eth.getAccounts((error, accounts) => {
 				details.current.accounts = accounts;
 				console.log(accounts);
+				if (accounts.length > 0) {
+					setMetaMask("Set");
+					console.log("Set in accounts");
+				}
 			});
 		}
 		setup();
 		if (typeof window.ethereum !== "undefined") {
 			console.log("MetaMask is installed!");
 			details.current.ethereum = window.ethereum;
-			setMetaMask("Set");
-
+			if (details.current.web3 !== null)
+				details.current.web3.eth.getAccounts((error, accounts) => {
+					details.current.accounts = accounts;
+					console.log(accounts);
+					if (accounts.length > 0) {
+						setMetaMask("Set");
+						console.log("Set in accounts2");
+					}
+				});
+			console.log("Set in ethereum");
 			window.ethereum.on("chainChanged", handleChainChanged);
 			window.ethereum.on("accountsChanged", handleAccountsChanged);
 			window.ethereum.on("close", handleClose);
@@ -43,8 +55,13 @@ function App() {
 	}, [window.ethereum]);
 
 	//TO DO: Handling the following
-	function handleChainChanged() {}
-	function handleAccountsChanged() {}
+	function handleChainChanged(chainId) {
+		details.current.chainid = chainId;
+		window.location.reload();
+	}
+	function handleAccountsChanged(accounts) {
+		details.current.accounts = accounts;
+	}
 	function handleClose() {}
 	function handleNetworkChanged() {}
 
@@ -54,6 +71,7 @@ function App() {
 				.request({ method: "eth_requestAccounts" })
 				.then((accounts) => {
 					details.current.accounts = accounts;
+					setMetaMask("Set");
 				})
 				.catch((error) => console.log("Error"));
 		} catch (error) {
@@ -103,23 +121,29 @@ function App() {
 	}
 
 	return (
-		<Container centerContent>
+		<Container centerContent justifyItems>
 			Hello World! <br />
 			{metaMask === "" ? ( //TO DO: Handle the different cases for wallet load conditions
 				"Loading"
 			) : (
 				<div>
-					<Button colorScheme="blackAlpha" onClick={ConnectWallet}>
-						Connect Wallet!
-					</Button>
-					<br />
-					<Button colorScheme="facebook" onClick={GetBalance}>
-						Balance
-					</Button>
-					<br />
-					<Button colorScheme="whatsapp" onClick={MintExtra}>
-						Mint
-					</Button>
+					{metaMask !== "Set" && (
+						<Button colorScheme="blackAlpha" onClick={ConnectWallet}>
+							Connect Wallet!
+						</Button>
+					)}
+					{metaMask === "Set" && (
+						<div>
+							<br />
+							<Button colorScheme="facebook" onClick={GetBalance}>
+								Balance
+							</Button>
+							<br />
+							<Button colorScheme="whatsapp" onClick={MintExtra}>
+								Mint
+							</Button>
+						</div>
+					)}
 				</div>
 			)}
 		</Container>
